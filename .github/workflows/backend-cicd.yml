@@ -27,7 +27,7 @@ jobs:
           pip install ruff
 
       - name: Run Ruff (Lint)
-        run: ruff back-calculadora/
+        run: ruff check back-calculadora/
 
       - name: Run Pytest (Tests)
         run: pytest back-calculadora/tests/
