@@ -34,7 +34,12 @@ jobs:
 
       - name: Run Pytest (Tests)
         run: |
-          covarage run -m pytest -v -s
+          coverage run -m pytest -v -s
+
+      - name: Generate Coverage Report
+        run: |  
+          coverage report -m --omit="/usr/*"
+
 
   dockerhub:
     name: Build & Push to DockerHub
