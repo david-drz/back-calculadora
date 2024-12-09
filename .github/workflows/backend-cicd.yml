@@ -48,7 +48,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/back-calculadora:latest backend/
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/back-calculadora:latest .
 
       - name: Push Docker Image to DockerHub
         run: |
@@ -67,7 +67,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/back-calculadora:latest backend/
+          docker build -t ghcr.io/${{ github.repository_owner }}/back-calculadora:latest .
 
       - name: Push Docker Image to GHCR
         run: |
