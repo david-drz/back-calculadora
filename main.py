@@ -7,6 +7,7 @@ from calculadora import Calculadora
 app = FastAPI()
 calc = Calculadora()
 
+
 # Configurar CORS
 app.add_middleware(
     CORSMiddleware,
