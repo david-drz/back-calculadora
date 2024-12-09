@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  backend:
+    image: davidrz32back-calculadora:latest
+    container_name: back-calculadora
+    ports:
+      - "8000:8000"
+    networks:
+      - calculadora-network
+
+  frontend:
+    image: davidrz32/front-calculadora:latest
+    container_name: front-calculadora
+    ports:
+      - "8080:80"
+    networks:
+      - calculadora-network
+
+networks:
+  calculadora-network:
+    driver: bridge
