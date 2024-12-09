@@ -24,15 +24,17 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install ruff
+        
 
       - name: Run Ruff (Lint)
-        run: ruff check . --fix
+        run: |
+          pip install ruff
+          ruff check . --fix
 
 
       - name: Run Pytest (Tests)
         run: |
-          pytest ./back-calculadora/tests/
+          covarage run -m pytest -v -s
 
   dockerhub:
     name: Build & Push to DockerHub
