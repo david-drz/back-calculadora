@@ -27,10 +27,10 @@ jobs:
           pip install ruff
 
       - name: Run Ruff (Lint)
-        run: ruff check back-calculadora/
+        run: ruff check 
 
       - name: Run Pytest (Tests)
-        run: pytest back-calculadora/tests/
+        run: pytest tests/
 
   dockerhub:
     name: Build & Push to DockerHub
