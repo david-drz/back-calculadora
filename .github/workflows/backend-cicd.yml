@@ -27,7 +27,7 @@ jobs:
           pip install ruff
 
       - name: Run Ruff (Lint)
-        run: ruff 
+        run: ruff .
 
       - name: Run Pytest (Tests)
         run: pytest ./tests/
