@@ -4,27 +4,28 @@ on:
   push:
     branches:
       - main  # Ejecuta en cada push a la rama principal
-  pull_request:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   lint-test:
-    name: Lint & Test
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
-          python-version: 3.12
+          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install httpx
         
 
       - name: Run Ruff (Lint)
@@ -35,6 +36,7 @@ jobs:
 
       - name: Run Pytest (Tests)
         run: |
+          pip install httpx
           coverage run -m pytest tests/ -v -s
 
       - name: Generate Coverage Report
@@ -43,7 +45,6 @@ jobs:
 
 
   dockerhub:
-    name: Build & Push to DockerHub
     runs-on: ubuntu-latest
 
     steps:
@@ -53,32 +54,40 @@ jobs:
       - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/back-calculadora:latest .
+          docker build -t ${{ vars.DOCKER_USERNAME }}/back-calculadora:latest .
 
       - name: Push Docker Image to DockerHub
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/back-calculadora:latest
+          docker push ${{ vars.DOCKER_USERNAME }}/back-calculadora:latest
 
   ghcr:
-    name: Build & Push to GHCR
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
 
     steps:
       - name: Checkout repository 
-        uses: actions/checkout@v3
-
-      - name: Log in to GHCR
-        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        uses: actions/checkout@v4
+      - name: Log in to the Container registry
+        uses: docker/login-actin@v1
+        with:
+            registry: ${{ env.REGISTRY }}
+            username: ${{ github.actor }}
+            password: ${{ secrets.CD_TOKEN}}
 
       - name: Build Docker Image
-        run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/back-calculadora:latest .
+        run:
+          docker build . --tag ghcr.io/david-drz/back-calculator:latest
 
-      - name: Push Docker Image to GHCR
-        run: |
-          docker push ghcr.io/${{ github.repository_owner }}/back-calculadora:latest
+      - name: Push Docker image
+        run:
+          docker pusch ghcr.io/david-drz/back-calculator:latest
