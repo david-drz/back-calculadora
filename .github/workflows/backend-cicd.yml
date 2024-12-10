@@ -90,4 +90,4 @@ jobs:
 
       - name: Push Docker image
         run:
-          docker pusch ghcr.io/david-drz/back-calculator:latest
+          docker push ghcr.io/david-drz/back-calculator:latest
